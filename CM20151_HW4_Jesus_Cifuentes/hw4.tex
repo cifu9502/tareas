@@ -1,0 +1,107 @@
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+% Formato para los talleres del curso de Métodos Computacionales
+% Universidad de los Andes
+% 2015-10
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+\documentclass[11pt,letterpaper]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{mdframed}
+\usepackage{tabularx}
+\usepackage[absolute]{textpos} % Para poner una imagen completa en la portada
+\usepackage{multirow}
+\mdfdefinestyle{mystyle}{leftmargin=1cm,rightmargin=1cm,linecolor=red}
+\usepackage{float}
+\usepackage{hyperref}
+\decimalpoint
+%\usepackage{pst-barcode}
+%\usepackage{auto-pst-pdf}
+
+\newcommand{\base}[1]{\underline{\hspace{#1}}}
+\boxedpoints
+\pointname{ pt}
+%\extrawidth{0.75in}
+%\extrafootheight{-0.5in}
+\extraheadheight{-0.15in}
+%\pagestyle{head}
+
+%\noprintanswers
+%\printanswers
+\renewcommand{\solutiontitle}{}
+\SolutionEmphasis{\color{blue}}
+
+\usepackage{upquote,textcomp}
+\newcommand\upquote[1]{\textquotesingle#1\textquotesingle} % To fix straight quotes in verbatim
+
+\begin{document}
+\begin{center}
+{\Large Métodos Computacionales} \\
+Taller 4 - \textsc{Interpolación, Álgebra Lineal y Fourier} \\
+Profesor: Sebastián Pérez Saaibi\\
+Fecha de Publicación: {\small \it Marzo 6 de 2015}\\
+\end{center}
+
+\begin{textblock*}{40mm}(10mm,20mm)
+  \includegraphics[width=3cm]{logoUniandes.png}
+\end{textblock*}
+
+\begin{textblock*}{40mm}(161mm,20mm)
+  \includegraphics[width=3cm]{logoUniandes.png}
+\end{textblock*}
+
+\vspace{0.5cm}
+
+{\Large Fecha de Entrega:  \bf Marzo 19 de 2015 antes de las 21:59 COT}
+
+\vspace{0.5cm}
+
+{\Large Instrucciones de Entrega}\\
+
+
+Todo el código fuente y los datos se debe encontrar en un repositorio público en github con un commit final hecho antes de la fecha de entrega. El nombre del repositorio debe ser \newline \verb+CM20151_HW4_NombreApellido+, por ejemplo yo debo crear un repositorio llamado \newline \verb+CM20151_HW4_SebastianPerez+. El link al repositorio lo deben enviar a través de \textbf{sicuaplus} antes de la fecha/hora límite.
+
+En cada parte del ejercicio se entrega 1/3 de los puntos si el código propuesto es razonable, 1/3 si se puede ejecutar y 1/3 si entrega resultados correctos.
+
+\vspace{0.5cm}
+
+
+\begin{questions}
+
+\question[35] {\bf Calentamiento Global?}
+
+\begin{parts}
+\part[15] Cree un script de R que descargue los datos históricos de temperatura para 5 ciudades de Colombia: Bogotá, Cali, Bucaramanga, Barranquilla e Ipiales \footnote{Puese usar los datos de \url{http://data.giss.nasa.gov/gistemp/station_data/} para ese propósito}. El script debe generar como salida una tabla en representación limpia \footnote{Tidy Data: \url{vita.had.co.nz/papers/tidy-data.pdf}} llamada \verb+temperaturas.csv+ con las siguientes columnnas: \verb+año,mes,fecha,ciudad,temperatura+. Asimismo, debe generar una gráfica en formato \verb+.png+ de calidad de artículo que muestre las series de tiempo para las 5 ciudades. 
+\part[13] Cree un script de python llamado \verb+interp_temperaturas.py+ que haga y grafique una interpolación lineal, polinómica y por splines (escoja polinomio y órden de los splines) para cada una de las ciudades anteriores. Cuál método es mejor? Justifique estadísticamente su escogencia.
+\part[7] Cree un html (ya sea usando un cuaderno \verb+.Rmd+ o \verb+ipython+) en el que establezca y justifique estadísticamente su posición con respecto al calentamiento global en referencia a los datos de las 5 ciudades anteriores. 
+
+\end{parts}
+
+\newpage
+
+
+\question[30] {\bf Estudiando Rios y Oceanos} En este ejercicio, queremos ver el impacto de variables atmosféricas y términas en el comportamiento de rios y oceanos.
+
+\begin{parts}
+\part[10] A partir de este catálogo de descargas hidrográficas \footnote{\url{http://www.cgd.ucar.edu/cas/catalog/surface/dai-runoff/coastal-stns-byVol-updated-oct2007.txt}}, cree un script de python llamado \verb+top_300_rios.py+ que genere un archivo llamado \verb+top_300_rios.csv+ que solo contenga los con mayor tasa de flujo.
+\part[10] Usando el módulo \verb+Basemap+, cree un script de python que genere una gráfica en formato \verb+.png+ con la tasa de flujo de los principales 150 rios sobre un mapa.
+\part[10] , cree un script de python llamado \verb+interp_mapa.py+ que grafique un archivo .nc con las temperaturas medias del aire \footnote{\url{ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis.derived/surface/air.mon.ltm.nc}}. Haga una interpolación \emph{nearest neighbors} de esos valores, genere un gráfico y comente.
+\end{parts}
+
+
+\question[35] {\bf El poder de su voz}
+
+\begin{parts}
+\part[5] Escriba un script en \verb+C+ llamado \verb+grabar_mi_nombre.C+ que grabe un archivo \verb+.wav+ en el que diga su nombre completo (con dos apellidos).
+\part[10] Escriba un script llamado \verb+grafica_mi_voz.py+ que lea este \verb+.wav+ y grafique en un \verb+mi_voz.png+ la señal modulada de su voz. Tenga en cuenta las leyendas, nombres de los ejes y estética del gráfico.
+\part[10] Escriba un script llamado \verb+fft_de_mi_voz.py+ que ejecute una transformada rápida de fourier para su nombre, y encuentre el armónico más grande. Este script debe generar una imagen llamada \verb+mivoz_fft.png+ Describa el método utilizado para encontrar dicho armónico.
+\part[10] Haga un Makefile que genere las salidas descritas anteriormente en el órden adecuado y genere todas las salidas.
+\end{parts}
+
+
+\end{questions}
+\end{document}
