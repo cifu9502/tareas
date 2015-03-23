@@ -1,0 +1,14 @@
+all: nombre.wav  mi_voz.png  mi_voz_fft.png
+
+nombre.wav: grabar_mi_nombre.c 
+	gcc  grabar_mi_nombre.c -o  grabar_mi_nombre.x 
+	./grabar_mi_nombre.x 
+
+mi_voz.png: grafica_mi_voz.py  nombre.wav
+	python grafica_mi_voz.py
+
+mi_voz_fft.png: fft_de_mi_voz.py  nombre.wav
+	python fft_de_mi_voz.py
+
+clean:
+	rm -f $(binaries) *.o

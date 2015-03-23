@@ -1,0 +1,55 @@
+---
+title: "Predicción"
+author: "Jesús Cifuentes"
+date: "05/03/2015"
+output: html_document
+---
+
+Los 5 primeros valores de la serie de tiempo de COP/USD son:
+
+```{r, echo=FALSE, warning = FALSE, message=FALSE}
+library('Quandl')
+library('ggplot2')
+library('RColorBrewer')
+library('lubridate')
+library('stats')
+library('scales')
+#los datos descargados de quandl se ubican en a. 
+a <- Quandl("CURRFX/COPUSD", trim_start="2000-01-01", trim_end="2015-02-25")
+```
+
+```{r, eval =TRUE, echo=FALSE}
+ head(a$Rate, n=5)
+#Sera util mas tarde en el momento de realizar los facets, obtener un vector de los años
+a$year <- sprintf("%d", year(a$Date)) 
+```
+
+Al graficar los resultados obtenidos se obtiene:
+
+```{r, echo=FALSE}
+#Se grafica normalment
+q <- ggplot(a, aes(x = Date, y = Rate)) 
+q <-q + geom_line(aes(x = Date, y = Rate)) +  ggtitle("COP/USD ( 2000-01-01 -> 2015-02-23)")+  theme_bw()
+q
+```
+
+
+Y graficando los resultados anuales:
+
+```{r, echo=FALSE}
+q <- q + facet_wrap(~year, scales ="free") +theme(axis.ticks = element_blank(), axis.text.x = element_blank())  
+q
+```
+
+
+Y haciendo una aproximación lineal de grado 5 la cual es la aproximación lineal de mayor grado de la que disponemos (basta con observar las demas aproximaciones para notar que predicen modelos bastante alejados). Tambien se puede notar que una aproximación del tipo glm no sería nada eficiente en este caso, dibido a que ninguna de las familias de ditribuciones de glm ( poisson, gamma, gaussian) es  similar al tipo de gráfica que tenemos. Esta aproximación sigue siendo no muy buena como se puede ver en la gráfica, razón por la cual no hay que tomar demasiado enserio la devaluación tan abrupta de la moneda colombiana que se presenta.
+
+
+```{r, echo=FALSE}
+b <- a
+#En nuestro nuevo dataframe b, cambiamos la fecha en string a float para que no haya problemas al realizar la aproximacion
+b$Date <- decimal_date(ymd(a$Date)) 
+q2 <- ggplot(b, aes(x = Date, y = Rate)) 
+q2 <-q2 + geom_line(aes(x = Date, y = Rate)) +  ggtitle("COP/USD ( 2000-01-01 -> 2015-02-23)")+  theme_bw()+ geom_smooth(method = "lm", formula = y ~ poly(x, 5) ,fullrange=TRUE) + scale_x_continuous(limits = c(2000.0,2017.0)) 
+q2
+```
