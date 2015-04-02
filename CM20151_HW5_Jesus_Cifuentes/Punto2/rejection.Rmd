@@ -1,0 +1,114 @@
+---
+title: "Rejection"
+author: "Jesús Cifuentes"
+date: "02/04/2015"
+output: html_document
+---
+
+Al integrar utilizando el método del rechazo invocamos un total de 2000 números al azar entre los rangos mínimos y máximos de nuestra función, luego contamos cuantos de estos números caen por debajo de nuestra gráfica  y la razón entre estos y el número total de puntos será la misma razon entre el área que deseamos y el área total donde ubicamos los puntos. A continuación se muestra el gráfico de la función $(cos(50x) +sin(20x))^2$
+La cual vamos a integrar entre $0$ y $1$ con el método descrito. El resultado se mostrará después de la siguiente gráfica
+
+```{r , echo=FALSE}
+library('stats')
+library('ggplot2')
+
+#La siguientes funcion integra la función f entre los límites dados, y  hace la gráfica de 
+#la ubicación de los números aleatorios dentro de ella
+#inputs f - funcion a integrar. f tiene que ser univaluada
+#       limInf, limSup limites superiores e inferiores
+#output integral de la funcion
+integrateGraph <- function(f,limInf,limSup){
+  numRands <- 2000
+  nums <- seq(limInf, limSup, (limSup-limInf)/(numRands-1))
+  #Encuentra minimos y maximos en la funcion
+  M <- max(f(nums))
+  m <- min(f(nums))
+  
+  #Genera dos cadenas de numeros aleatorios (en x y en y)entre los rangos dados
+  r1 <- runif(numRands, limInf, limSup)
+  r2 <- runif(numRands,m, M)
+  
+  #Cuenta cuantos puntos queda abajo de la curva, rate es la tasa entre los puntos
+  #dentro de la curva y el total de puntos
+  f1 <- f(r1)-r2
+  rate <- length(f1[f1 >= 0])/numRands
+  #Int es la integral hallada
+  Int <- (rate*(limSup-limInf)*(M-m) + (limInf)*(M-m)) 
+  
+  #Crea el dataframe y hace la grafica
+  a <- data.frame( X = nums, Y = f(nums), Px = r1, Py = r2)
+  s <- c("Integration (", rate*numRands,"points of", numRands, "inside the figure)")
+  q <- ggplot(a, aes(x = X, y = Y)) 
+  q <-q + geom_line(aes(x = X, y = Y))+  geom_line(colour = "red", size = 1) + geom_point(aes(x = Px, y = Py)) +  ggtitle(paste(s, collapse = " "))+  theme_bw()
+  plot(q)
+  
+  return(Int)
+}
+
+#Esta es la función asigna en el talle
+sq <- function(x){
+  return((cos(50*x) +sin(20*x))^2)
+}
+
+integrateGraph(sq,0,1)
+
+
+```
+
+Mientras que si comparamos con la función integrate, obtenemos:
+```{r, echo=FALSE}
+integrate(sq, 0, 1)
+```
+Como se puede ver los resultados son bastante cercanos, sin embargo, ya que solo estamos usando 2000 números aleatorios, varía bastante cada vez que  se corre el programa. Una forma de mejorarlo sería utilizando más números aleatorios(lo cual no se realizó ya que no se visualizaría bien la gráfica). 
+
+Ahora realizamos la integral desde $2$ hasta infinito de la función $\frac{1}{\pi(1+x^2)}$. En este caso la gráfica es simplemente una muestra de la ubicación de los puntos, pero el modo de encontrar la verdadera integral es un poco más profundo. El resultado se muestra después de la gráfica. 
+
+```{r, echo=FALSE}
+
+#Es básicamente la misma funcion que integrateGraph solo que no realiza la gráfica dada
+#inputs f - funcion a integrar. f tiene que ser univaluada
+#       limInf, limSup limites superiores e inferiores
+#output integral de la funcion
+int1<- function(f,limInf,limSup){
+  numRands <- 100000
+  nums <- seq(limInf, limSup, (limSup-limInf)/(numRands-1))
+  M <- max(f(nums))
+  m <- 0
+  r1 <- runif(numRands, limInf, limSup)
+  r2 <- runif(numRands,m, M)
+  f1 <- f(r1)-r2
+  rate <- length(f1[f1 >= 0])/numRands
+  Int <- (rate*(limSup)*(M-m))
+  return(Int)
+}
+
+#Integra hasta infinito la funcion dada por parametro
+#inputs f - funcion a integrar. f tiene que ser univaluada
+#       limInf integra desde el limite inferior
+#output integral de la funcion
+
+intInfinity <- function(f,limInf){
+  interval <- 100
+  Int <- int1(f,limInf,(limInf+interval))
+  s <- Int
+  n <- 1
+  #suma las integrales cada 100 numeros hasta que la siguiente suma sea despreciable
+  while(s>Int/100){
+    s <- int1(f,n*interval,(n+1)*interval)
+    Int <- Int+s
+    n <- n+1
+  }
+  #Invoca la funcion integrateGraph apenas para que se muestre la grafica, no tiene ningún otro proposito
+  integrateGraph(func,limInf, n*interval)
+  return(Int)
+}
+func <- function(x){
+  return(1/(pi*(1+x^2)))
+}
+intInfinity(func,2)
+```
+Comparando nuestro resultado con el de la función integrate(que se encuentra a continuación), vemos que es bastante cercano pero todavía falta presición
+```{r, echo=FALSE}
+integrate(func, 2, Inf)
+```
+
