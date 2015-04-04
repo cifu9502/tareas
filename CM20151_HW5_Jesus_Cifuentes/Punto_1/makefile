@@ -1,8 +1,7 @@
-
 all: densidades.dat fuerza.dat phi.dat serena.png
 
 densidades.dat: densidades.py 
-	densidades.py
+	python densidades.py
 
 phi.dat: antiFourier.py  densidades.dat
 	python antiFourier.py

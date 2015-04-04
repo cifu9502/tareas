@@ -101,11 +101,11 @@ plt.text(mi2[0],mi2[1],'Minimo')
 plt.plot([maxi2[0]], [maxi2[1]], 'ro')
 plt.text(maxi2[0],maxi2[1],'Maximo')
 
-#Se grafica la matriz F12 de fuerzas proyectadas al plano x-z. Note que el resultado es muy parecido a la imagen dada, fue por eso que se escogio este plano
+#Se grafica la matriz F12 de fuerzas proyectadas al plano x-z. Note que el resultado es muy parecido a la imagen dada
 #Se esta extendiendo entre los valores  minimos y maximos en x y en z en el archivo de ipython que  correponden justamente a los valores minimos y maximos de la posicion
 
 plt.imshow(F12.T, extent=(minx, maxx,minz,maxz), origin='lower')
-plt.title('Fuerzas en Serena Venus (plano x-z)')
+plt.title('Serena Venus')
 plt.ylabel('Z')
 plt.xlabel('X')
 plt.savefig('serena.png')

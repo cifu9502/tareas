@@ -168,4 +168,4 @@ def guardar(fileName,matrix,dim):
     fh.close()        
 
 
-guardar('densidades.dat', ro,part)
+guardar('densidades.dat', ro2,part)
