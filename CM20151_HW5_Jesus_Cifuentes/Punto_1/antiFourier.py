@@ -3,7 +3,7 @@
 from __future__ import division 
 import numpy as np
 
-part = 150
+part = 250
 
 
 #recupera la informacion de la matriz  Matrix guardada en filename

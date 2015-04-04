@@ -4,7 +4,7 @@
 from __future__ import division 
 import numpy as np
 
-part = 250
+part = 150
 l0 = 2.7146499999999989
 l1 = 2.7276200000000017
 l2 = 3.4131200000000064

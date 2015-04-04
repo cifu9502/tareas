@@ -4,7 +4,7 @@ import numpy as np
 from scipy import meshgrid
 import matplotlib.pyplot as plt
 
-part = 150 
+part = 250 
 
 #recupera la informacion de la matriz  Matrix guardada en filename
 #inputs fileName-- nombre del archivo donde se guarda
