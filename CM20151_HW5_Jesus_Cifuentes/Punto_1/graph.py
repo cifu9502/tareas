@@ -49,17 +49,35 @@ maxy = 36.650640000000003
 minz = 33.495959999999997
 maxz = 36.909080000000003
 
-#Da la posicision en 3D del elemento senalado en la matriz F2 de fuerzas
+#Se dan los deltas en cada eje
+l0 = maxx-minx   
+delta0 = l0/part     
+l1 = maxy-miny   
+delta1 = l1/part
+l2 = maxz-minz   
+delta2 = l2/part 
+ 
+
+#Se da la posicion de los centros de las casillas y se guardan en a
+a = np.zeros((3, part))
+a[0]= np.linspace(minx+delta0/2,maxx-delta0/2,part)
+a[1]= np.linspace(miny+delta1/2,maxy-delta1/2,part)
+a[2]= np.linspace(minz+delta2/2,maxz-delta2/2,part)
+
+
+
+
+#Da la posicision en 3D del elemento con valor num en la matriz F2 de fuerzas
 def darPosicion(num):
-    for i in range(0,part-2):
-        for j in range(0,part-2):
-            for k in range(0,part-2):
-                if F2[i,j,k] == num:
-                    #Se transforma a nuestras coordenadas
-                    i1 = i*(maxx-minx)/part + minx
-                    j1 = j*(maxy-miny)/part + miny
-                    k1 = k*(maxz-minz)/part + minz
-                    return [i1,j1,k1]
+#Se obtiene la posicion de num
+    m1 = np.where(F2==num)
+    Min = []
+#Se convierte la posicion a nuestras coordenadas
+    Min.append( m1[0]*delta0 + a[0][1])
+    Min.append( m1[1]*delta1 + a[1][1])
+    Min.append( m1[2]*delta2 + a[2][1])
+    return (map(float, Min))       
+            
                      
 mi = darPosicion(mini)           
 maxi = darPosicion(Max)
@@ -73,14 +91,15 @@ F12 = F2[:,0,:]
 for k in range(1, part-2):
     F12 = F12 + F2[:,k,:]
 
-#Da la posicision en 3D del elemento senalado en la matriz F12 de fuerzas proyectadas al plano x-z
+#Da la posicision en 3D del elemento con valor num en la matriz F12 de fuerzas proyectadas al plano x-z
 def darPosicion2(num):
-    for i in range(0,part-2):
-        for j in range(0,part-2):
-            if F12[i,j] == num:
-                i1 = i*(maxx-minx)/part + minx
-                j1 = j*(maxz-minz)/part + minz
-                return [i1,j1]
+#Se obtiene la posicion de num
+    m1 = np.where(F12==num)
+    Min = []
+#Se convierte la posicion a nuestras coordenadas
+    Min.append( m1[0]*delta0 + a[0][1])
+    Min.append( m1[1]*delta2 + a[2][1])
+    return (map(float, Min)) 
 
 
 mini = F12.min()
@@ -93,13 +112,29 @@ maxi2 = darPosicion2(Max)
 print "Cuando proyectamos al plano x-z el punto de minima fuerza es " + repr(mi2)
 print "Y el punto de maxima fuerza es " + repr(maxi2)   
 
+#Se encuentra la posicion de los puntos de minima y maxima fuerza en el plano x-z utilizando la funcion darPosicion2
+mi2 = darPosicion2(mini)           
+maxi2 = darPosicion2(Max)   
+
+
+#Se anaden fig y axs 
+fig, axs = plt.subplots(1,1)
+
 #Se grafican los puntos de minima y maxima fuerza
-plt.plot([mi2[0]], [mi2[1]], 'ro')
-plt.text(mi2[0],mi2[1],'Minimo')
+axs.plot([mi2[0]], [mi2[1]], 'ro')
+axs.text(mi2[0],mi2[1],'Minimo')
+axs.plot([maxi2[0]], [maxi2[1]], 'ro')
+axs.text(maxi2[0],maxi2[1],'Maximo')
 
+#Debido a la forma de la funcion contourf es necesario trasponer la matriz
+F12 = F12.transpose()
+#Se define el numero de niveles que va a tener el contorno. Para nuestro caso elegimos 15
+levels = np.linspace(mini, Max, 15)
 
-plt.plot([maxi2[0]], [maxi2[1]], 'ro')
-plt.text(maxi2[0],maxi2[1],'Maximo')
+#Se hace el mapeo por el contorno dado
+cs = axs.contourf(a[0][1:-1], a[2][1:-1], F12, levels=levels)
+#Se anade barra de color
+fig.colorbar(cs, ax=axs, format="%.3g")
 
 #Se grafica la matriz F12 de fuerzas proyectadas al plano x-z. Note que el resultado es muy parecido a la imagen dada, fue por eso que se escogio este plano
 #Se esta extendiendo entre los valores  minimos y maximos en x y en z en el archivo de ipython que  correponden justamente a los valores minimos y maximos de la posicion
