@@ -53,18 +53,6 @@ sq <- function(x){
 integrateGraph(sq,0,1)
 
 
-```
-
-Mientras que si comparamos con la función integrate, obtenemos:
-```{r, echo=FALSE}
-integrate(sq, 0, 1)
-```
-Como se puede ver los resultados son bastante cercanos, sin embargo, ya que solo estamos usando 2000 números aleatorios, varía bastante cada vez que  se corre el programa. Una forma de mejorarlo sería utilizando más números aleatorios(lo cual no se realizó ya que no se visualizaría bien la gráfica). 
-
-Ahora realizamos la integral desde $2$ hasta infinito de la función $\frac{1}{\pi(1+x^2)}$. En este caso la gráfica es simplemente una muestra de la ubicación de los puntos, pero el modo de encontrar la verdadera integral es un poco más profundo. El resultado se muestra después de la gráfica. 
-
-```{r, echo=FALSE}
-
 #Es básicamente la misma funcion que integrateGraph solo que no realiza la gráfica dada
 #inputs f - funcion a integrar. f tiene que ser univaluada
 #       limInf, limSup limites superiores e inferiores
@@ -81,6 +69,23 @@ int1<- function(f,limInf,limSup){
   Int <- (rate*(limSup)*(M-m))
   return(Int)
 }
+
+```
+
+Mientras que si comparamos con la función integrate, obtenemos:
+```{r, echo=FALSE}
+integrate(sq, 0, 1)
+```
+Como se puede ver los resultados son bastante cercanos, sin embargo, ya que solo estamos usando 2000 números aleatorios, varía bastante cada vez que  se corre el programa. Una forma de mejorarlo sería utilizando más números aleatorios(lo cual no se realizó gráficamente ya que no se visualizaría bien la gráfica). Sin embargo este resultado más exacto (realizado con 10000 puntos) se muestra a continuación:
+```{r, echo=FALSE}
+int1(sq, 0, 1)
+```
+
+
+Ahora realizamos la integral desde $2$ hasta infinito de la función $\frac{1}{\pi(1+x^2)}$. En este caso la gráfica es simplemente una muestra de la ubicación de los puntos, pero el modo de encontrar la verdadera integral es un poco más profundo. El resultado se muestra después de la gráfica. 
+
+```{r, echo=FALSE}
+
 
 #Integra hasta infinito la funcion dada por parametro
 #inputs f - funcion a integrar. f tiene que ser univaluada
@@ -107,7 +112,7 @@ func <- function(x){
 }
 intInfinity(func,2)
 ```
-Comparando nuestro resultado con el de la función integrate(que se encuentra a continuación), vemos que es bastante cercano pero todavía falta presición
+Comparando nuestro resultado con el de la función integrate(que se encuentra a continuación), vemos que es bastante cercano pero todavía falta presición. El método utilizado fue básicamente integrar de a intervalos utilizando la función creada de (0-100), (100-200) , (200-300) ... hasta que los términos añadidos sean obsoletos.
 ```{r, echo=FALSE}
 integrate(func, 2, Inf)
 ```
